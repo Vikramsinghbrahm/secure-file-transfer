@@ -1,15 +1,22 @@
 # Secure File Transfer System
 
-## Description
+The Secure File Transfer System is a web application designed to securely handle file uploads and downloads using SSL/TLS encryption. It is built using Flask for the backend, SQLAlchemy for database management, and JWT for user authentication. The project ensures that all file transfers between the client and the server are secure and encrypted, protecting the data from unauthorized access.
 
-This project is a secure file transfer system that allows users to upload and download files securely using SSL/TLS encryption. The system is built using Flask (Python) for the backend and supports user authentication with JWT tokens.
+## Key Features
 
-## Features
+### User Authentication
 
-- User registration and login
-- Secure file upload
-- Secure file download
-- SSL/TLS encryption for secure communication
+- **Registration**: Users can create an account by providing a username and password.
+- **Login**: Users can log in to the system using their credentials to receive a JWT token for authenticated actions.
+
+### Secure File Transfer
+
+- **File Upload**: Authenticated users can upload files to the server. The files are stored securely in a designated directory.
+- **File Download**: Authenticated users can download files they have uploaded. The files are transferred over a secure connection.
+
+### SSL/TLS Encryption
+
+- The application uses SSL/TLS to encrypt data during transfer, ensuring that files are securely transmitted between the client and the server.
 
 ## Technologies Used
 
@@ -98,5 +105,5 @@ docker build -t secure-file-transfer-backend ./backend
 ```bash
 docker run -d -p 5000:5000 --name secure-file-transfer-backend secure-file-transfer-backend
 ```
-##### Contributing
+## Contributing
 Contributions are welcome! Please create an issue or submit a pull request.
