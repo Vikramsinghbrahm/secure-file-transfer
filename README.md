@@ -67,7 +67,7 @@ Navigate to the backend directory and start the Flask application:
 cd backend
 python run.py
 ```
-##### Usage
+## Usage
 #### Register a New User
 ```bash
 curl -X POST https://localhost:5000/register -H "Content-Type: application/json" -d "{\"username\": \"testuser\", \"password\": \"testpassword\"}" --insecure
@@ -87,7 +87,7 @@ Replace <TOKEN> with the JWT token you received from the login command, and repl
 ```bash
 curl -X GET https://localhost:5000/download/filename.txt -H "Authorization: Bearer <TOKEN>" --insecure -o downloaded_file.txt
 ```
-##### Docker Support
+## Docker Support
 To run the application using Docker, follow these steps:
 
 #### 1. Build the Docker Image
