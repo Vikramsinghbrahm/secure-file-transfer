@@ -1,0 +1,90 @@
+:root {
+  --color-background: #f5f3ec;
+  --color-surface: rgba(255, 255, 255, 0.82);
+  --color-ink: #122b39;
+  --color-muted: #5f7480;
+  --color-accent: #008b7e;
+  --color-accent-strong: #0d615b;
+  --shadow-soft: 0 20px 60px rgba(18, 43, 57, 0.08);
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background:
+    radial-gradient(circle at top left, rgba(0, 139, 126, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(49, 114, 189, 0.12), transparent 22%),
+    linear-gradient(180deg, #f6f3eb 0%, #ecf1f6 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.surface-card {
+  padding: 24px;
+  border-radius: 28px;
+  background: var(--color-surface);
+  border: 1px solid rgba(18, 43, 57, 0.08);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button {
+  min-height: 48px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.primary-button {
+  border: none;
+  background: linear-gradient(135deg, #0b7c70, #1a9788);
+  color: white;
+  box-shadow: 0 14px 30px rgba(13, 97, 91, 0.22);
+}
+
+.secondary-button {
+  border: none;
+  background: rgba(18, 43, 57, 0.08);
+  color: var(--color-ink);
+}
+
+.ghost-button {
+  border: 1px solid rgba(18, 43, 57, 0.1);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--color-ink);
+}
