@@ -55,6 +55,7 @@ class FileRecord(db.Model):
     content_type = db.Column(db.String(255), nullable=False)
     size_bytes = db.Column(db.Integer, nullable=False)
     sha256_checksum = db.Column(db.String(64), nullable=False)
+    encrypted = db.Column(db.Boolean, nullable=False, default=False)
     download_count = db.Column(db.Integer, nullable=False, default=0)
     last_downloaded_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=utcnow)

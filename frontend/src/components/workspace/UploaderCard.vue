@@ -14,9 +14,26 @@
     </p>
 
     <form class="upload-form" @submit.prevent="submitFile">
-      <label class="file-picker">
-        <span>{{ selectedFile ? selectedFile.name : "Choose file" }}</span>
-        <input type="file" :disabled="!authenticated || busy" @change="onFileChange">
+      <label
+        class="file-picker"
+        :class="{ 'file-picker--drag-over': dragging, 'file-picker--has-file': !!selectedFile }"
+        @dragenter.prevent="onDragEnter"
+        @dragover.prevent
+        @dragleave="onDragLeave"
+        @drop.prevent="onDrop"
+      >
+        <span class="file-picker__icon" aria-hidden="true">
+          {{ selectedFile ? "📄" : "⬆" }}
+        </span>
+        <span class="file-picker__label">
+          {{ selectedFile ? selectedFile.name : dragging ? "Drop to attach" : "Choose or drop a file" }}
+        </span>
+        <input
+          type="file"
+          :disabled="!authenticated || busy"
+          @change="onFileChange"
+          aria-label="Select file to upload"
+        >
       </label>
 
       <button
@@ -59,15 +76,37 @@ export default {
   data() {
     return {
       selectedFile: null,
+      dragging: false,
+      _dragCounter: 0,
     };
   },
   methods: {
     onFileChange(event) {
       this.selectedFile = event.target.files[0] || null;
     },
+    onDragEnter() {
+      if (!this.authenticated || this.busy) return;
+      this._dragCounter++;
+      this.dragging = true;
+    },
+    onDragLeave() {
+      this._dragCounter--;
+      if (this._dragCounter <= 0) {
+        this._dragCounter = 0;
+        this.dragging = false;
+      }
+    },
+    onDrop(event) {
+      this._dragCounter = 0;
+      this.dragging = false;
+      if (!this.authenticated || this.busy) return;
+      const file = event.dataTransfer?.files?.[0];
+      if (file) {
+        this.selectedFile = file;
+      }
+    },
     submitFile() {
       const fileInput = this.$el.querySelector("input[type='file']");
-
       this.$emit("upload", this.selectedFile);
       this.selectedFile = null;
       if (fileInput) {
@@ -127,14 +166,37 @@ ul {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   min-height: 72px;
   padding: 16px 18px;
   border-radius: 18px;
-  border: 1px dashed rgba(18, 43, 57, 0.18);
+  border: 1.5px dashed rgba(18, 43, 57, 0.18);
   background: rgba(245, 249, 247, 0.8);
   font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.file-picker--drag-over {
+  border-color: #00b3a4;
+  background: rgba(0, 179, 164, 0.06);
+}
+
+.file-picker--has-file {
+  border-style: solid;
+  border-color: rgba(0, 179, 164, 0.45);
+}
+
+.file-picker__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.file-picker__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .file-picker input {

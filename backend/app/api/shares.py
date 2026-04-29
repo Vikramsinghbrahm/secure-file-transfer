@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from ..services.encryption_service import get_fernet
 from ..services.file_service import stream_file_response
 from ..services.share_service import resolve_share_download, revoke_share_link_for_user
 from ..utils.responses import success_response
@@ -14,11 +15,15 @@ def download_from_share_link(token):
         token=token,
         storage_root=current_app.config["STORAGE_ROOT"],
     )
+    file_record = payload["file"]
+    fernet = get_fernet(current_app) if file_record.encrypted else None
     return stream_file_response(
         file_path=payload["path"],
-        download_name=payload["file"].original_filename,
-        content_type=payload["file"].content_type,
+        download_name=file_record.original_filename,
+        content_type=file_record.content_type,
         chunk_size=current_app.config["DOWNLOAD_CHUNK_SIZE_BYTES"],
+        fernet=fernet,
+        content_length=file_record.size_bytes if fernet else None,
     )
 
 

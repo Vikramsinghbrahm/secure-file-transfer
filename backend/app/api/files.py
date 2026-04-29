@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from ..services.auth_service import get_user_or_404
+from ..services.encryption_service import get_fernet
 from ..services.file_service import (
     delete_file_for_user,
     get_download_payload,
@@ -45,6 +46,7 @@ def upload_file():
         user=user,
         uploaded_file=request.files.get("file"),
         storage_root=current_app.config["STORAGE_ROOT"],
+        fernet=get_fernet(current_app),
     )
     return success_response(
         data={"file": file_record.to_dict()},
@@ -61,11 +63,15 @@ def download_file(file_id):
         file_id=file_id,
         storage_root=current_app.config["STORAGE_ROOT"],
     )
+    file_record = payload["file"]
+    fernet = get_fernet(current_app) if file_record.encrypted else None
     return stream_file_response(
         file_path=payload["path"],
-        download_name=payload["file"].original_filename,
-        content_type=payload["file"].content_type,
+        download_name=file_record.original_filename,
+        content_type=file_record.content_type,
         chunk_size=current_app.config["DOWNLOAD_CHUNK_SIZE_BYTES"],
+        fernet=fernet,
+        content_length=file_record.size_bytes if fernet else None,
     )
 
 

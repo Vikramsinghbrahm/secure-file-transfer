@@ -1,4 +1,3 @@
-import logging
 import re
 from pathlib import Path
 from uuid import uuid4
@@ -7,6 +6,7 @@ from flask import Flask, g, request
 
 from .core.config import Config
 from .core.errors import register_error_handlers
+from .core.logging import configure_json_logging
 from .extensions import db, init_extensions
 
 
@@ -20,7 +20,7 @@ def create_app(test_config=None):
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
     Path(app.config["STORAGE_ROOT"]).mkdir(parents=True, exist_ok=True)
 
-    configure_logging(app)
+    configure_json_logging(app)
     init_extensions(app)
     register_request_hooks(app)
 
@@ -34,17 +34,6 @@ def create_app(test_config=None):
             db.create_all()
 
     return app
-
-
-def configure_logging(app):
-    if app.logger.handlers:
-        return
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
-    )
-    app.logger.setLevel(logging.INFO)
 
 
 def is_private_network_origin(origin):

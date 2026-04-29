@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(FLASK_APP=run.py flask db init)",
+      "Bash(python -m pip install -r requirements.txt)",
+      "Bash(venv/Scripts/python.exe -m pip install -r requirements.txt)"
+    ]
+  }
+}

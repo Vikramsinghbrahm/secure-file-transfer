@@ -23,7 +23,7 @@ def list_files_for_user(user_id):
     )
 
 
-def store_file_for_user(user, uploaded_file, storage_root):
+def store_file_for_user(user, uploaded_file, storage_root, fernet=None):
     if uploaded_file is None:
         raise ApiError(400, "Attach a file before uploading.")
 
@@ -42,21 +42,24 @@ def store_file_for_user(user, uploaded_file, storage_root):
     destination = user_directory / stored_filename
 
     sha256 = hashlib.sha256()
-    total_size = 0
+    chunks = []
 
     try:
-        with destination.open("wb") as handle:
-            while True:
-                chunk = uploaded_file.stream.read(1024 * 1024)
-                if not chunk:
-                    break
-                total_size += len(chunk)
-                sha256.update(chunk)
-                handle.write(chunk)
+        while True:
+            chunk = uploaded_file.stream.read(1024 * 1024)
+            if not chunk:
+                break
+            sha256.update(chunk)
+            chunks.append(chunk)
+
+        plaintext = b"".join(chunks)
+        total_size = len(plaintext)
 
         if total_size == 0:
-            destination.unlink(missing_ok=True)
             raise ApiError(400, "Empty files are not supported.")
+
+        data_to_write = fernet.encrypt(plaintext) if fernet else plaintext
+        destination.write_bytes(data_to_write)
 
         record = FileRecord(
             original_filename=original_filename,
@@ -65,6 +68,7 @@ def store_file_for_user(user, uploaded_file, storage_root):
             content_type=uploaded_file.mimetype or "application/octet-stream",
             size_bytes=total_size,
             sha256_checksum=sha256.hexdigest(),
+            encrypted=fernet is not None,
             owner_id=user.id,
         )
 
@@ -144,24 +148,34 @@ def resolve_storage_path(storage_root, relative_path):
     return Path(storage_root) / relative_path
 
 
-def stream_file_response(file_path, download_name, content_type, chunk_size):
+def stream_file_response(
+    file_path, download_name, content_type, chunk_size, fernet=None, content_length=None
+):
     response = Response(
-        stream_with_context(iter_file_chunks(file_path, chunk_size)),
+        stream_with_context(iter_file_chunks(file_path, chunk_size, fernet=fernet)),
         mimetype=content_type,
     )
-    response.headers["Content-Length"] = str(file_path.stat().st_size)
+    response.headers["Content-Length"] = str(
+        content_length if content_length is not None else file_path.stat().st_size
+    )
     response.headers["Content-Disposition"] = build_content_disposition(download_name)
     response.headers["X-Accel-Buffering"] = "no"
     return response
 
 
-def iter_file_chunks(file_path, chunk_size):
-    with file_path.open("rb") as handle:
-        while True:
-            chunk = handle.read(chunk_size)
-            if not chunk:
-                break
-            yield chunk
+def iter_file_chunks(file_path, chunk_size, fernet=None):
+    if fernet is not None:
+        plaintext = fernet.decrypt(file_path.read_bytes())
+        view = memoryview(plaintext)
+        for i in range(0, len(plaintext), chunk_size):
+            yield bytes(view[i : i + chunk_size])
+    else:
+        with file_path.open("rb") as handle:
+            while True:
+                chunk = handle.read(chunk_size)
+                if not chunk:
+                    break
+                yield chunk
 
 
 def build_content_disposition(download_name):

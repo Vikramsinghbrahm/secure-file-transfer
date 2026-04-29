@@ -42,7 +42,8 @@ class Config:
     UPLOAD_RATE_LIMIT_WINDOW_SECONDS = read_int_env(
         "UPLOAD_RATE_LIMIT_WINDOW_SECONDS", 15 * 60
     )
-    STORAGE_ENCRYPTION_MODE = os.getenv("STORAGE_ENCRYPTION_MODE", "server-side")
+    STORAGE_ENCRYPTION_MODE = os.getenv("STORAGE_ENCRYPTION_MODE", "none")
+    STORAGE_ENCRYPTION_KEY = os.getenv("STORAGE_ENCRYPTION_KEY", "")
     KEY_MANAGEMENT_STRATEGY = os.getenv(
         "KEY_MANAGEMENT_STRATEGY", "platform-managed"
     )
