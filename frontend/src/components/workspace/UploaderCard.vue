@@ -23,7 +23,7 @@
         @drop.prevent="onDrop"
       >
         <span class="file-picker__icon" aria-hidden="true">
-          {{ selectedFile ? "📄" : "⬆" }}
+          {{ selectedFile ? "FILE" : "UPLOAD" }}
         </span>
         <span class="file-picker__label">
           {{ selectedFile ? selectedFile.name : dragging ? "Drop to attach" : "Choose or drop a file" }}
@@ -148,8 +148,8 @@ ul {
   align-self: flex-start;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(0, 179, 164, 0.12);
-  color: #116f67;
+  background: rgba(20, 117, 111, 0.12);
+  color: var(--color-accent-strong);
   font-weight: 800;
 }
 
@@ -169,27 +169,31 @@ ul {
   gap: 12px;
   min-height: 72px;
   padding: 16px 18px;
-  border-radius: 18px;
-  border: 1.5px dashed rgba(18, 43, 57, 0.18);
-  background: rgba(245, 249, 247, 0.8);
+  border-radius: 20px;
+  border: 1.5px dashed rgba(24, 50, 60, 0.18);
+  background: rgba(250, 248, 243, 0.92);
   font-weight: 700;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
 
 .file-picker--drag-over {
-  border-color: #00b3a4;
-  background: rgba(0, 179, 164, 0.06);
+  border-color: var(--color-accent);
+  background: rgba(20, 117, 111, 0.07);
 }
 
 .file-picker--has-file {
   border-style: solid;
-  border-color: rgba(0, 179, 164, 0.45);
+  border-color: rgba(20, 117, 111, 0.45);
 }
 
 .file-picker__icon {
-  font-size: 1.25rem;
   flex-shrink: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(24, 50, 60, 0.08);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
 }
 
 .file-picker__label {

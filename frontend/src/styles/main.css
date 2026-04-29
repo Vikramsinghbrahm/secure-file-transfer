@@ -1,17 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap");
+
 :root {
-  --color-background: #f5f3ec;
-  --color-surface: rgba(255, 255, 255, 0.82);
-  --color-ink: #122b39;
-  --color-muted: #5f7480;
-  --color-accent: #008b7e;
-  --color-accent-strong: #0d615b;
-  --shadow-soft: 0 20px 60px rgba(18, 43, 57, 0.08);
-  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --color-background: #f6efe4;
+  --color-surface: rgba(255, 252, 247, 0.74);
+  --color-surface-strong: rgba(255, 255, 255, 0.92);
+  --color-ink: #18323c;
+  --color-muted: #64727b;
+  --color-accent: #14756f;
+  --color-accent-strong: #0e5651;
+  --color-highlight: #efaa43;
+  --color-border: rgba(24, 50, 60, 0.1);
+  --shadow-soft: 0 24px 70px rgba(31, 46, 54, 0.12);
+  --shadow-button: 0 16px 34px rgba(14, 86, 81, 0.24);
+  --font-display: "Fraunces", "Georgia", serif;
   --font-body: "Manrope", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -25,11 +33,12 @@ body {
   font-family: var(--font-body);
   color: var(--color-ink);
   background:
-    radial-gradient(circle at top left, rgba(0, 139, 126, 0.16), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(49, 114, 189, 0.12), transparent 22%),
-    linear-gradient(180deg, #f6f3eb 0%, #ecf1f6 100%);
+    radial-gradient(circle at top left, rgba(239, 170, 67, 0.18), transparent 25%),
+    radial-gradient(circle at 85% 12%, rgba(20, 117, 111, 0.18), transparent 20%),
+    linear-gradient(180deg, #f8f0e4 0%, #eef3f0 100%);
 }
 
+a,
 button,
 input {
   font: inherit;
@@ -40,7 +49,9 @@ button {
   transition:
     transform 160ms ease,
     box-shadow 160ms ease,
-    opacity 160ms ease;
+    opacity 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
 }
 
 button:hover:not(:disabled) {
@@ -52,13 +63,28 @@ button:disabled {
   opacity: 0.65;
 }
 
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(20, 117, 111, 0.45);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(239, 170, 67, 0.28);
+}
+
+#app {
+  min-height: 100vh;
+}
+
 .surface-card {
   padding: 24px;
-  border-radius: 28px;
+  border-radius: 30px;
   background: var(--color-surface);
-  border: 1px solid rgba(18, 43, 57, 0.08);
+  border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(18px);
 }
 
 .primary-button,
@@ -66,25 +92,25 @@ button:disabled {
 .ghost-button {
   min-height: 48px;
   padding: 12px 18px;
-  border-radius: 14px;
+  border-radius: 16px;
   font-weight: 800;
 }
 
 .primary-button {
   border: none;
-  background: linear-gradient(135deg, #0b7c70, #1a9788);
+  background: linear-gradient(135deg, #0e5c56, #18837a);
   color: white;
-  box-shadow: 0 14px 30px rgba(13, 97, 91, 0.22);
+  box-shadow: var(--shadow-button);
 }
 
 .secondary-button {
   border: none;
-  background: rgba(18, 43, 57, 0.08);
+  background: linear-gradient(135deg, rgba(239, 170, 67, 0.18), rgba(255, 255, 255, 0.86));
   color: var(--color-ink);
 }
 
 .ghost-button {
-  border: 1px solid rgba(18, 43, 57, 0.1);
-  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(24, 50, 60, 0.14);
+  background: rgba(255, 255, 255, 0.72);
   color: var(--color-ink);
 }

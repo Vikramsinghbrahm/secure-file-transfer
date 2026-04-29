@@ -23,12 +23,12 @@ What makes it technically interesting:
 
 ## Stack
 
-| Layer | Technologies |
-|---|---|
-| Backend | Flask, Flask-JWT-Extended, SQLAlchemy, SQLite |
-| Frontend | Vue 3, Vue Router, Vite, Axios |
-| Auth & Transfer | JWT, expiring share links, checksum validation, request IDs |
-| Dev Workflow | PowerShell launcher, Docker Compose, backend integration tests |
+| Layer           | Technologies                                                   |
+| --------------- | -------------------------------------------------------------- |
+| Backend         | Flask, Flask-JWT-Extended, SQLAlchemy, SQLite                  |
+| Frontend        | Vue 3, Vue Router, Vite, Axios                                 |
+| Auth & Transfer | JWT, expiring share links, checksum validation, request IDs    |
+| Dev Workflow    | PowerShell launcher, Docker Compose, backend integration tests |
 
 ## System Diagram
 
@@ -104,23 +104,6 @@ sequenceDiagram
 - In-memory rate limiting is simple and dependency-light; distributed deployments would need Redis or a shared limiter.
 - Server-side encryption is the current baseline; full envelope encryption with per-file data keys is the next hardening step.
 
-## Production Signals
-
-| Signal | Status | Notes |
-|---|---|---|
-| Auth | Implemented | JWT sessions with protected routes and public share links for external access |
-| Integration tests | Implemented | Backend tests cover auth, transfer lifecycle, sharing, and rate limiting |
-| Env config | Implemented | Configurable secrets, share limits, upload limits, ports, and storage settings |
-| Structured API envelopes | Implemented | Consistent success/error payloads with request correlation IDs |
-| Transfer metrics | Implemented | Dashboard exposes file counts, storage bytes, download volume, and active shares |
-| Audit trail | Implemented | Auth and transfer events are stored and rendered in the UI |
-| Structured logs | Implemented | All log records emitted as JSON with timestamp, level, logger, message, and request_id |
-| Encryption at rest | Implemented | Fernet AES-128-CBC; key derived from APP_SECRET_KEY via PBKDF2-SHA256 or set via STORAGE_ENCRYPTION_KEY; enabled with STORAGE_ENCRYPTION_MODE=server-side |
-| Database migrations | Implemented | Alembic via Flask-Migrate; `flask db upgrade` applies schema changes; Dockerfile runs migrations on startup |
-| Graceful shutdown | Implemented | Gunicorn workers with configurable graceful_timeout; CPU-scaled worker count; auto-recycle via max_requests |
-| Tracing | Partial | Request IDs exist on every response; full distributed tracing (OpenTelemetry) is a future improvement |
-| Retries | Limited | Idempotency and resumable transfers are future work |
-
 ## Failure Handling
 
 - Invalid or expired JWTs return structured `401` responses.
@@ -167,19 +150,19 @@ secure-file-transfer/
 
 ## API Routes
 
-| Method | Route | Description |
-|---|---|---|
-| POST | `/api/v1/auth/register` | Create account |
-| POST | `/api/v1/auth/login` | Authenticate and receive JWT |
-| GET | `/api/v1/health` | Health check |
-| GET | `/api/v1/dashboard` | Transfer metrics and summary |
-| GET | `/api/v1/files` | List user files |
-| POST | `/api/v1/files` | Upload file (streamed) |
-| GET | `/api/v1/files/<file_id>/download` | Download owned file |
-| POST | `/api/v1/files/<file_id>/shares` | Create expiring share link |
-| GET | `/api/v1/shares/<token>/download` | Public download via share token |
-| DELETE | `/api/v1/shares/<share_link_id>` | Revoke share link |
-| DELETE | `/api/v1/files/<file_id>` | Delete file |
+| Method | Route                              | Description                     |
+| ------ | ---------------------------------- | ------------------------------- |
+| POST   | `/api/v1/auth/register`            | Create account                  |
+| POST   | `/api/v1/auth/login`               | Authenticate and receive JWT    |
+| GET    | `/api/v1/health`                   | Health check                    |
+| GET    | `/api/v1/dashboard`                | Transfer metrics and summary    |
+| GET    | `/api/v1/files`                    | List user files                 |
+| POST   | `/api/v1/files`                    | Upload file (streamed)          |
+| GET    | `/api/v1/files/<file_id>/download` | Download owned file             |
+| POST   | `/api/v1/files/<file_id>/shares`   | Create expiring share link      |
+| GET    | `/api/v1/shares/<token>/download`  | Public download via share token |
+| DELETE | `/api/v1/shares/<share_link_id>`   | Revoke share link               |
+| DELETE | `/api/v1/files/<file_id>`          | Delete file                     |
 
 ## Run It
 

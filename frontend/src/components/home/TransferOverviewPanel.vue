@@ -1,36 +1,32 @@
 <template>
   <section class="overview-panel">
     <div class="overview-panel__content">
-      <p class="overview-panel__eyebrow">Transfer control plane</p>
-      <h2 class="overview-panel__title">
-        Secure sharing, streamed transfers, and operational guardrails.
-      </h2>
+      <p class="overview-panel__eyebrow">Workspace status</p>
+      <h2 class="overview-panel__title">Secure transfer workspace</h2>
       <p class="overview-panel__description">
-        VaultFlow combines JWT-authenticated access, expiring public share
-        links, streamed upload and download paths, rate-limited ingress, and a
-        live audit feed into a transfer workflow designed for controlled file exchange.
+        Upload, distribute, and review transfer activity from a single authenticated workspace.
       </p>
 
       <div class="overview-panel__capabilities">
-        <span>Expiring credential-free share links</span>
-        <span>Streamed file transfer paths</span>
-        <span>SHA-256 integrity metadata</span>
-        <span>Audit events and rate-limited entrypoints</span>
+        <span>Authenticated access</span>
+        <span>Expiring links</span>
+        <span>Integrity metadata</span>
+        <span>Audit records</span>
       </div>
     </div>
 
     <div class="overview-panel__stats">
       <div class="overview-panel__stat-card">
-        <span class="overview-panel__stat-label">Authenticated operator</span>
+        <span class="overview-panel__stat-label">Session</span>
         <strong>{{ isAuthenticated ? user.username : "Not signed in" }}</strong>
       </div>
       <div class="overview-panel__stat-card">
-        <span class="overview-panel__stat-label">Managed artifacts</span>
+        <span class="overview-panel__stat-label">Files</span>
         <strong>{{ metrics.totalFiles }}</strong>
       </div>
       <div class="overview-panel__stat-card">
-        <span class="overview-panel__stat-label">Completed downloads</span>
-        <strong>{{ metrics.downloadCount }}</strong>
+        <span class="overview-panel__stat-label">Active links</span>
+        <strong>{{ metrics.activeShares }}</strong>
       </div>
     </div>
   </section>
@@ -64,8 +60,8 @@ export default {
   padding: 32px;
   border-radius: 32px;
   background:
-    radial-gradient(circle at top left, rgba(0, 179, 164, 0.25), transparent 34%),
-    linear-gradient(135deg, rgba(247, 249, 244, 0.95), rgba(231, 242, 255, 0.92));
+    radial-gradient(circle at top left, rgba(20, 117, 111, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(251, 249, 245, 0.97), rgba(240, 245, 245, 0.94));
   box-shadow: var(--shadow-soft);
   border: 1px solid rgba(18, 43, 57, 0.08);
 }
@@ -74,22 +70,20 @@ export default {
   margin: 0 0 14px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--color-accent);
 }
 
 .overview-panel__title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.6rem);
-  line-height: 1;
-  max-width: 11ch;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+  line-height: 0.96;
 }
 
 .overview-panel__description {
-  margin: 20px 0 0;
-  max-width: 60ch;
-  font-size: 1.05rem;
+  margin: 18px 0 0;
+  max-width: 52ch;
   color: var(--color-muted);
 }
 
@@ -97,11 +91,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .overview-panel__capabilities span {
-  padding: 12px 16px;
+  padding: 11px 14px;
   border-radius: 999px;
   background: rgba(18, 43, 57, 0.06);
   font-weight: 700;
@@ -114,9 +108,9 @@ export default {
 }
 
 .overview-panel__stat-card {
-  padding: 22px;
+  padding: 20px 22px;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.84);
   border: 1px solid rgba(18, 43, 57, 0.08);
 }
 
@@ -135,10 +129,6 @@ export default {
 @media (max-width: 920px) {
   .overview-panel {
     grid-template-columns: 1fr;
-  }
-
-  .overview-panel__title {
-    max-width: none;
   }
 }
 </style>
